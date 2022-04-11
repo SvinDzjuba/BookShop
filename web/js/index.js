@@ -169,3 +169,48 @@ function removeAllActive() {
     menuPurchase.classList.remove("active");
     menuProfile.classList.remove("active");
 }
+
+function showLoginForm() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+<div class="card" style="width: 25em; margin: 5em auto;">
+    <div class="card-body">
+        <form>
+            <div class="card-header py-2" style="text-align: center; font-weight: 500; font-size: 32px">AUTHORIZATION</div>
+            <div class="form-group">
+              <label for="login" class="form-label mt-4">Login</label>
+              <input type="login" class="form-control" id="exampleInputEmail1" placeholder="Enter login">
+            </div>
+            <div class="form-group">
+              <label for="password" class="form-label mt-4">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn my-4 w-100 btn-primary">Submit</button>
+        </form>
+    </div>
+</div>`;
+    const buttonLogin = document.getElementById("button_login");
+    buttonLogin.addEventListener('click', (e)=>{
+        e.preventDefault();
+        sendCredentials();
+    })
+}
+function sendCredentials() {
+    const login = document.getElementById('login').value;
+    const password = document.getElementById('password').value;
+    const credential = {
+        "login": login,
+        "password": password,
+    }
+    const response = fetch('login', {
+       method: 'POST',
+       headers: {
+           'ContentType': 'application/json;charset:utf8'
+       },
+       body: JSON.stringify(credential)
+    });
+    if(response.ok) {
+        const result = response.json();
+        document.getElementById('info').innerHTML = result.info;
+    }
+}
