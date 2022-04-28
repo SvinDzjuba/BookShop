@@ -1,5 +1,6 @@
 import {loginModule} from './LoginModule.js';
 import {authorModule} from './AuthorModule.js';
+import {bookModule} from './BookModule.js';
 
 class ViewModule{
     showLoginForm(){
@@ -77,6 +78,61 @@ class ViewModule{
             document.getElementById('titlePageAuthor').innerHTML = 'Редактирование данных автора';
         });
         authorModule.insertListAuthors();
+    };
+    
+    showNewBookForm(){
+        const bookcontent = document.getElementById('content');
+        bookcontent.innerHTML = 
+            `<div id="content" class="flex-grow-1">
+            <div class="card border-secondary mb-3 mx-auto" style="max-width: 30rem;">
+                <h3 class="card-header w-100 text-center ">Добавление книги</h3>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="bookname" class="form-label mt-4">Название</label>
+                    <input type="text" class="form-control" id="bookname" placeholder="Название">
+                  </div>
+                  <div class="form-group">
+                    <label for="quantity" class="form-label mt-4">Количество</label>
+                    <input type="text" class="form-control" id="quantity" placeholder="Количество">
+                  </div>
+                  <div class="form-group">
+                    <label for="publishedyear" class="form-label mt-4">Год выпуска</label>
+                    <input type="text" class="form-control" id="publishedyear" placeholder="Год">
+                  </div>
+                  <button id="btn_add_book" type="submit" class="btn btn-primary w-100 my-4">Добавить книгу</button>
+                  <button id="btn_update_book" type="submit" class="btn btn-primary w-100 my-4 d-none">Изменить книгу</button>
+                </div>
+            </div>
+            <div class="card border-0 mb-3 mx-auto" style="max-width: 50rem;">
+                <div class="card-body row">
+                        <div class="form-group mb-4">
+                            <label for="select_books" class=" col-form-label mt-2">Список книг</label>
+                            <select class="col-sm-10 form-select form-control-plaintext" id="select_books">
+                              
+                            </select>
+                        </div>
+                </div>
+            </div>
+        </div>`;
+        document.getElementById('btn_add_book').addEventListener('click',(e)=>{
+            e.preventDefault();
+            bookModule.createNewBook();
+        });
+        document.getElementById('btn_update_book').addEventListener('click',(e)=>{
+            e.preventDefault();
+            bookModule.bookAuthor();
+            document.getElementById('btn_add_book').classList.remove('d-none');
+            document.getElementById('btn_update_book').classList.add('d-none');
+            document.getElementById('titlePageBook').innerHTML = 'Добавление книги';
+        });
+        document.getElementById('select_books').addEventListener('change',(e)=>{
+            e.preventDefault();
+            bookModule.editBook();
+            document.getElementById('btn_add_book').classList.add('d-none');
+            document.getElementById('btn_update_book').classList.remove('d-none');
+            document.getElementById('titlePageBook').innerHTML = 'Редактирование данных книги';
+        });
+        bookModule.insertListBooks();
     };
 }
 const viewModule = new ViewModule();

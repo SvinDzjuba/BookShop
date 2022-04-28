@@ -43,10 +43,6 @@
                         <a class="nav-link d-none" href="#"  id="menu_logout">Выйти</a>
                       </li>
                     </ul>
-                    <form class="d-flex">
-                      <input class="form-control me-sm-2" type="text" placeholder="Search">
-                      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form>
                   </div>
                 </div>
             </nav>
@@ -76,6 +72,37 @@
                         <div class="form-group mb-4">
                             <label for="exampleSelect1" class=" col-form-label mt-2">Список авторов</label>
                             <select class="col-sm-10 form-select form-control-plaintext" id="exampleSelect1">
+                              
+                            </select>
+                        </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="content" class="flex-grow-1">
+            <div class="card border-secondary mb-3 mx-auto" style="max-width: 30rem;">
+                <h3 class="card-header w-100 text-center ">Добавление книги</h3>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="bookname" class="form-label mt-4">Название</label>
+                    <input type="text" class="form-control" id="bookname" placeholder="Название">
+                  </div>
+                  <div class="form-group">
+                    <label for="quantity" class="form-label mt-4">Количество</label>
+                    <input type="text" class="form-control" id="quantity" placeholder="Количество">
+                  </div>
+                  <div class="form-group">
+                    <label for="publishedyear" class="form-label mt-4">Год выпуска</label>
+                    <input type="text" class="form-control" id="publishedyear" placeholder="Год">
+                  </div>
+                  <button id="btn_add_book" type="submit" class="btn btn-primary my-3">Добавить книгу</button>
+                </div>
+            </div>
+            <div class="card border-0 mb-3 mx-auto" style="max-width: 50rem;">
+                <div class="card-body row">
+                        <div class="form-group mb-4">
+                            <label for="exampleSelect1" class=" col-form-label mt-2">Список книг</label>
+                            <select class="col-sm-10 form-select form-control-plaintext" id="exampleSelect">
                               
                             </select>
                         </div>

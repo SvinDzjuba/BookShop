@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import jsontools.AuthorJsonBuilder;
 import session.AuthorFacade;
+import session.BookFacade;
+import entity.Book;
+import jsontools.BookJsonBuilder;
 import session.ReaderFacade;
 import session.RoleFacade;
 import session.UserFacade;
@@ -41,11 +44,17 @@ import tools.PasswordProtected;
     "/getListAuthors",
     "/getAuthor",
     "/updateAuthor",
+    
+    "/createNewBook",
+    "/getListBooks",
+    "/getBook",
+    "/updateBook",
   
 })
 public class ManagerServlet extends HttpServlet {
     
     @EJB private AuthorFacade authorFacade;
+    @EJB private BookFacade bookFacade;
     
     
     
@@ -130,6 +139,78 @@ public class ManagerServlet extends HttpServlet {
                 updateAuthor.setFirstname(firstname);
                 authorFacade.edit(updateAuthor);
                 job.add("info", "Автор изменен");
+                job.add("status", true);
+                try (PrintWriter out = response.getWriter()) {
+                    out.println(job.build().toString());
+                }
+                break;
+                
+            case "/createNewBook":
+                jsonReader = Json.createReader(request.getReader());
+                jsonObject = jsonReader.readObject();
+                String bookname = jsonObject.getString("bookname","");
+                String quantity = jsonObject.getString("quantity","");
+                String publishedyear = jsonObject.getString("publishedyear","");
+                if("".equals(bookname) || "".equals(quantity) || "".equals(publishedyear)){
+                    job.add("info", "Заполните все поля")
+                       .add("bookname",bookname)
+                       .add("quantity",quantity)
+                       .add("publishedyear",publishedyear);
+                    try (PrintWriter out = response.getWriter()) {
+                        out.println(job.build().toString());
+                    }
+                    break;
+                }
+                
+                Book newBook = new Book();
+                newBook.setBookName(bookname);
+                newBook.setQuantity(Integer.parseInt(quantity));
+                newBook.setPublishedYear(Integer.parseInt(publishedyear));
+                newBook.setCount(Integer.parseInt(quantity));
+                bookFacade.create(newBook);
+                job.add("info", "Создана книга "+newBook.getBookName())
+                   .add("status",true);
+                try (PrintWriter out = response.getWriter()) {
+                    out.println(job.build().toString());
+                }
+                break;
+            case "/getListBooks":
+                List<Book> listBooks = bookFacade.findAll();
+                BookJsonBuilder bjb = new BookJsonBuilder();
+                job.add("status",true);
+                job.add("info","Создан массив книг");
+                job.add("authors",bjb.getBooksJsonArray(listBooks));
+                try (PrintWriter out = response.getWriter()) {
+                    out.println(job.build().toString());
+                }
+                break;
+            case "/getBook":
+                jsonReader = Json.createReader(request.getReader());
+                jsonObject = jsonReader.readObject();
+                String bookId = jsonObject.getString("authorId","");
+                Book book = bookFacade.find(Long.parseLong(bookId));
+                bjb = new BookJsonBuilder();
+                job.add("info", "Редактируем книгу: "+book.getBookName());
+                job.add("status", true);
+                job.add("author", bjb.getBookJsonObject(book));
+                try (PrintWriter out = response.getWriter()) {
+                    out.println(job.build().toString());
+                }
+                break;
+            case "/updateBook":
+                jsonReader = Json.createReader(request.getReader());
+                jsonObject = jsonReader.readObject();
+                bookId = jsonObject.getString("bookId","");
+                bookname = jsonObject.getString("bookname","");
+                quantity = jsonObject.getString("quantity","");
+                publishedyear = jsonObject.getString("publishedyear","");
+                Book updateBook = bookFacade.find(Long.parseLong(bookId));
+                updateBook.setBookName(bookname);
+                updateBook.setCount(Integer.parseInt(quantity) + updateBook.getCount());
+                updateBook.setQuantity(Integer.parseInt(quantity));
+                updateBook.setPublishedYear(Integer.parseInt(publishedyear));
+                bookFacade.edit(updateBook);
+                job.add("info", "Книга изменен");
                 job.add("status", true);
                 try (PrintWriter out = response.getWriter()) {
                     out.println(job.build().toString());
